@@ -1,7 +1,8 @@
-output "shared_ssh_config"{
+output "ssh_config"{
   value = <<-SSHCONFIG
+
 ##################################### SHARED ##################################
-Host ${var.env_name}.* 
+Host ${var.env_name}-* 
   User ${var.user}
   Port 22
   UserKnownHostsFile /dev/null
@@ -12,11 +13,7 @@ Host ${var.env_name}.*
   LogLevel FATAL
   IdentityFile ${var.ssh_keyfile}
 ###############################################################################
-SSHCONFIG
-}
 
-output "dev_ssh_config"{
-    value = <<-SSHCONFIG
 ###################################### DEV ####################################
 %{ for host in google_compute_instance.dev.* ~}
 
@@ -24,11 +21,7 @@ Host ${host.name}
     Hostname ${host.network_interface.0.access_config.0.nat_ip}
 %{ endfor ~}
 ###############################################################################
-SSHCONFIG
-}
 
-output "kubeadmVM_ssh_config"{
-    value = <<-SSHCONFIG
 #################################### KUBEADM ##################################
 %{ for host in google_compute_instance.kubeadm.* ~}
 
@@ -36,11 +29,7 @@ Host ${host.name}
     Hostname ${host.network_interface.0.access_config.0.nat_ip}
 %{ endfor ~}
 ###############################################################################
-SSHCONFIG
-}
 
-output "test_ssh_config"{
-    value = <<-SSHCONFIG
 ###################################### TEST ###################################
 %{ for host in google_compute_instance.test.* ~}
 
