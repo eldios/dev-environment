@@ -1,41 +1,29 @@
-variable "node_count" {
-  default = "0"
-}
-
-//
-// Separate disk for etcd
-//
 resource "google_compute_disk" "test-etcd-disk-" {
-  count = "${var.node_count}"
-  name  = "knisbet-test-disk-${count.index}-etcd"
+  count = "${var.test_node_count}"
+  name  = "${var.env_name}-test-disk-${count.index}-etcd"
   type  = "pd-ssd"
   size  = "50"
 
   labels = {
     env   = "test"
-    kevin = ""
-    user  = "kevin"
+    user  = "${var.user}"
   }
 }
 
-//
-// Create instance for testing gravity
-//
 resource "google_compute_instance" "test" {
-  count                     = "${var.node_count}"
-  name                      = "knisbet-test${count.index + 1}"
-  description               = "Test VM for kevin"
+  count                     = "${var.test_node_count}"
+  name                      = "${var.env_name}-test${count.index + 1}"
+  description               = "Test VM - ${var.env_name}"
   machine_type              = "custom-6-10240"
   zone                      = "${var.zone}"
   allow_stopping_for_update = true
   can_ip_forward            = true
 
-  tags = ["knisbet-dev"]
+  tags = ["${var.env_name}-dev"]
 
   labels = {
     env   = "test"
-    kevin = ""
-    user  = "kevin"
+    user  = "${var.user}"
   }
 
   boot_disk {
@@ -44,7 +32,7 @@ resource "google_compute_instance" "test" {
     initialize_params {
       size  = 60
       type  = "pd-ssd"
-      image = "${data.google_compute_image.dev.self_link}"
+      image = "${var.testImage}"
     }
   }
 
@@ -61,9 +49,10 @@ resource "google_compute_instance" "test" {
     }
   }
 
-  metadata {
+  metadata = {
     startup-script  = "${data.template_file.test_startup.rendered}"
     shutdown-script = "${data.template_file.test_shutdown.rendered}"
+    ssh_keys = "${var.user}:${file("${var.ssh_keyfile}")}"
   }
 
   service_account {
@@ -74,11 +63,15 @@ resource "google_compute_instance" "test" {
 data "template_file" "test_startup" {
   template = "${file("scripts/test-startup.tpl")}"
 
-  vars {}
+  vars = {
+    user = "${var.user}"
+  }
 }
 
 data "template_file" "test_shutdown" {
   template = "${file("scripts/test-shutdown.tpl")}"
 
-  vars {}
+  vars = {
+    user = "${var.user}"
+  }
 }

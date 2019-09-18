@@ -13,12 +13,12 @@ sysctl -w fs.inotify.max_user_watches=100000000
 #
 # Setup a ramdisk to speed up builds
 #
-mkdir -p /home/knisbet/go /home/knisbet/.go/ram /home/knisbet/.go/persistent/
-# chown -R knisbet /home/knisbet/go /home/knisbet/.go/
-mount -t tmpfs -o size=20g tmpfs /home/knisbet/.go/ram
-mkdir -p /home/knisbet/.go/ram/upper /home/knisbet/.go/ram/work
-mount -t overlay overlay -o lowerdir=/home/knisbet/.go/persistent,upperdir=/home/knisbet/.go/ram/upper,workdir=/home/knisbet/.go/ram/work /home/knisbet/go
-chown knisbet:knisbet /home/knisbet/go 
+mkdir -p /home/${user}/go /home/${user}/.go/ram /home/${user}/.go/persistent/
+# chown -R ${user}: /home/${user}/go /home/${user}/.go/
+mount -t tmpfs -o size=20g tmpfs /home/${user}/.go/ram
+mkdir -p /home/${user}/.go/ram/upper /home/${user}/.go/ram/work
+mount -t overlay overlay -o lowerdir=/home/${user}/.go/persistent,upperdir=/home/${user}/.go/ram/upper,workdir=/home/${user}/.go/ram/work /home/${user}/go
+chown ${user}: /home/${user}/go 
 
 
 #
@@ -26,12 +26,12 @@ chown knisbet:knisbet /home/knisbet/go
 #
 for i in {1..5}
 do
-   mkdir -p /nfs/share/common /nfs/share/knisbet-test$${i}
-   mkdir -p /nfs/share/.work/knisbet-test$${i} /nfs/share/.upper/knisbet-test$${i}
+   mkdir -p /nfs/share/common /nfs/share/${user}-test$${i}
+   mkdir -p /nfs/share/.work/${user}-test$${i} /nfs/share/.upper/${user}-test$${i}
    mount -t overlay overlay -o \
-    lowerdir=/nfs/share/common,upperdir=/nfs/share/.upper/knisbet-test$${i},workdir=/nfs/share/.work/knisbet-test$${i} \
+    lowerdir=/nfs/share/common,upperdir=/nfs/share/.upper/${user}-test$${i},workdir=/nfs/share/.work/${user}-test$${i} \
     -o nfs_export=on -o index=on \
-    /nfs/share/knisbet-test$${i}
+    /nfs/share/${user}-test$${i}
 done
 
 #
@@ -49,6 +49,8 @@ apt-get -y install software-properties-common \
     nfs-common \
     gcc \
     make \
+    tmux \
+    screen \
     libudev-dev \
     nfs-kernel-server
 
@@ -66,12 +68,12 @@ if [ ! -f /install_complete ]; then
     # Setup automatic shutdown cron
     #
     echo "0 22,0,2,4,6,8,10 * * * /sbin/shutdown +115" > /etc/cron.d/autoshutdown
-    echo '*/10 * * * * root /usr/bin/bash -c "if /usr/bin/mountpoint -q /home/knisbet/go; then /usr/bin/run-one /usr/bin/rsync -ah /home/knisbet/go/ /home/knisbet/.go/persistent/  --del; fi"' > /etc/cron.d/sync-ramdrive
+    echo '*/10 * * * * root /usr/bin/bash -c "if /usr/bin/mountpoint -q /home/${user}/go; then /usr/bin/run-one /usr/bin/rsync -ah /home/${user}/go/ /home/${user}/.go/persistent/  --del; fi"' > /etc/cron.d/sync-ramdrive
 
     #
-    # Allow knisbet to run docker
+    # Allow ${user} to run docker
     #
-    usermod -a -G docker knisbet
+    usermod -a -G docker ${user}
 
     touch /install_complete
 fi
