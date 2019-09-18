@@ -7,7 +7,7 @@ variable user {
 }
 variable ssh_keyfile {
   description = "Public SSH keyfile used for SSH connections"
-  default = "~/.ssh/id_ed25519.pub"
+  default = "~/.ssh/id_rsa.pub"
 }
 
 variable dev_node_count {
@@ -25,9 +25,8 @@ variable kubeadm_node_count {
 
 variable "project" {
   description = "GCP project"
-  default = "kubeadm-167321"
+  default = "your-google-project"
 }
-
 
 variable "region" {
   description = "Region to create cluster"
