@@ -1,6 +1,6 @@
 resource "google_compute_instance" "dev" {
   count                     = "${var.dev_node_count}"
-  name                      = "${var.env_name}"
+  name                      = "${var.env_name}-dev-${count.index}"
   description               = "Development VM - ${var.env_name}"
   machine_type              = "custom-10-30720"
   zone                      = "${var.zone}"
