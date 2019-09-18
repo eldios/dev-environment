@@ -1,6 +1,6 @@
-env_name = "my-awesome-dev"
-user = "myUsername"
-ssh_keyfile = "~/.ssh/id_ed25519.pub"
+env_name = "user-dev"
+user = "user"
+ssh_keyfile = "~/.ssh/id_rsa.pub"
 
 dev_node_count = 1
 kubeadm_node_count = 0
