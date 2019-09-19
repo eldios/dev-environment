@@ -27,7 +27,7 @@ apt-get -y install software-properties-common \
 # Mount NFS directory structure off dev VM
 #
 #mkdir -p /nfs/gravity
-#mount -t nfs knisbet-dev:/nfs/share/`hostname` /nfs/gravity
+#mount -t nfs user-dev:/nfs/share/`hostname` /nfs/gravity
 
 #
 # Setup a ramdisk for local state
@@ -36,7 +36,7 @@ apt-get -y install software-properties-common \
 #mount -t tmpfs tmpfs /ram
 #mkdir -p /ram/upper /ram/work /ram/lower
 #mkdir -p /gravity/
-#mount -t overlay overlay -o lowerdir=/ram/lower:/nfs/knisbet-dev/share,upperdir=/ram/upper,workdir=/ram/work /gravity
+#mount -t overlay overlay -o lowerdir=/ram/lower:/nfs/user-dev/share,upperdir=/ram/upper,workdir=/ram/work /gravity
 
 #
 # Setup automatic shutdown cron
