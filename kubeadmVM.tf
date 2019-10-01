@@ -2,7 +2,7 @@ resource "google_compute_instance" "kubeadm" {
   count                     = "${var.kubeadm_node_count}"
   name                      = "${var.env_name}-kubeadm${count.index + 1}"
   description               = "Kubeadm VM - ${var.env_name}"
-  machine_type              = "custom-4-8192"
+  machine_type              = "${var.kubeadmVmType}"
   zone                      = "${var.zone}"
   allow_stopping_for_update = true
   can_ip_forward            = true

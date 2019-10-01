@@ -1,8 +1,8 @@
 resource "google_compute_instance" "dev" {
   count                     = "${var.dev_node_count}"
-  name                      = "${var.env_name}-dev-${count.index}"
+  name                      = "${var.env_name}-dev${count.index}"
   description               = "Development VM - ${var.env_name}"
-  machine_type              = "custom-10-30720"
+  machine_type              = "${var.devVmType}"
   zone                      = "${var.zone}"
   allow_stopping_for_update = true
   can_ip_forward            = true

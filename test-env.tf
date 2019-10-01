@@ -14,7 +14,7 @@ resource "google_compute_instance" "test" {
   count                     = "${var.test_node_count}"
   name                      = "${var.env_name}-test${count.index + 1}"
   description               = "Test VM - ${var.env_name}"
-  machine_type              = "custom-6-10240"
+  machine_type              = "${var.testVmType}"
   zone                      = "${var.zone}"
   allow_stopping_for_update = true
   can_ip_forward            = true
