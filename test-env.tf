@@ -1,3 +1,15 @@
+resource "google_compute_disk" "test-gravity-disk-" {
+  count = "${var.test_node_count}"
+  name  = "${var.env_name}-test-disk-${count.index}-gravity"
+  type  = "pd-ssd"
+  size  = "100"
+
+  labels = {
+    env   = "test"
+    user  = "${var.user}"
+  }
+}
+
 resource "google_compute_disk" "test-etcd-disk-" {
   count = "${var.test_node_count}"
   name  = "${var.env_name}-test-disk-${count.index}-etcd"
@@ -19,7 +31,7 @@ resource "google_compute_instance" "test" {
   allow_stopping_for_update = true
   can_ip_forward            = true
 
-  tags = ["${var.env_name}-dev"]
+  tags = ["${var.env_name}-dev", "devlele"]
 
   labels = {
     env   = "test"
@@ -41,12 +53,9 @@ resource "google_compute_instance" "test" {
     device_name = "${element(google_compute_disk.test-etcd-disk-.*.name, count.index)}"
   }
 
-  network_interface {
-    network = "default"
-
-    access_config {
-      // Ephemeral IP
-    }
+  attached_disk {
+    source      = "${element(google_compute_disk.test-gravity-disk-.*.self_link, count.index)}"
+    device_name = "${element(google_compute_disk.test-gravity-disk-.*.name, count.index)}"
   }
 
   metadata = {
@@ -57,6 +66,15 @@ resource "google_compute_instance" "test" {
 
   service_account {
     scopes = ["userinfo-email", "compute-rw", "storage-rw"]
+  }
+
+  network_interface {
+    network = "default"
+
+    access_config {
+      // Ephemeral IP
+    }
+
   }
 }
 

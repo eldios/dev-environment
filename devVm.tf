@@ -7,7 +7,7 @@ resource "google_compute_instance" "dev" {
   allow_stopping_for_update = true
   can_ip_forward            = true
 
-  tags = ["${var.env_name}"]
+  tags = ["${var.env_name}", "devlele"]
 
   labels = {
     env   = "dev"
@@ -25,15 +25,6 @@ resource "google_compute_instance" "dev" {
     }
   }
 
-  network_interface {
-    network = "default"
-
-    access_config {
-      // Ephemeral IP
-    }
-
-  }
-
   metadata = {
     startup-script  = "${data.template_file.startup.rendered}"
     shutdown-script = "${data.template_file.shutdown.rendered}"
@@ -42,6 +33,15 @@ resource "google_compute_instance" "dev" {
 
   service_account {
     scopes = ["userinfo-email", "compute-rw", "storage-rw"]
+  }
+
+  network_interface {
+    network = "default"
+
+    access_config {
+      // Ephemeral IP
+    }
+
   }
 }
 
@@ -54,9 +54,11 @@ resource "google_compute_firewall" "dev" {
   network = "${data.google_compute_network.network.self_link}"
 
   allow {
-    protocol = "tcp"
-    ports    = ["22"]
+    protocol = "all"
   }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags = ["devlele"]
 }
 
 data "template_file" "startup" {

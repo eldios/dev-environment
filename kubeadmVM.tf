@@ -7,7 +7,7 @@ resource "google_compute_instance" "kubeadm" {
   allow_stopping_for_update = true
   can_ip_forward            = true
 
-  tags = ["${var.env_name}-kubeadm"]
+  tags = ["${var.env_name}-kubeadm", "devlele"]
 
   labels = {
     env   = "test"
