@@ -1,9 +1,9 @@
 resource "google_compute_instance" "dev" {
-  count                     = "${var.dev_node_count}"
+  count                     = var.dev_node_count
   name                      = "${var.env_name}-dev${count.index}"
   description               = "Development VM - ${var.env_name}"
-  machine_type              = "${var.devVmType}"
-  zone                      = "${var.zone}"
+  machine_type              = var.devVmType
+  zone                      = var.zone
   allow_stopping_for_update = true
   can_ip_forward            = true
 
@@ -11,7 +11,7 @@ resource "google_compute_instance" "dev" {
 
   labels = {
     env   = "dev"
-    user  = "${var.user}"
+    user  = var.user
   }
 
   boot_disk {
@@ -21,13 +21,13 @@ resource "google_compute_instance" "dev" {
       size = 250
       type = "pd-standard"
 
-      image = "${var.devImage}"
+      image = var.devImage
     }
   }
 
   metadata = {
-    startup-script  = "${data.template_file.startup.rendered}"
-    shutdown-script = "${data.template_file.shutdown.rendered}"
+    startup-script  = data.template_file.startup.rendered
+    shutdown-script = data.template_file.shutdown.rendered
     ssh_keys        = "${var.user}:${file("${var.ssh_keyfile}")}"
   }
 
@@ -51,7 +51,7 @@ data "google_compute_network" "network" {
 
 resource "google_compute_firewall" "dev" {
   name    = "${var.env_name}-allow"
-  network = "${data.google_compute_network.network.self_link}"
+  network = data.google_compute_network.network.self_link
 
   allow {
     protocol = "all"
@@ -62,17 +62,17 @@ resource "google_compute_firewall" "dev" {
 }
 
 data "template_file" "startup" {
-  template = "${file("scripts/dev-startup.tpl")}"
+  template = file("scripts/dev-startup.tpl")
 
   vars = {
-    user = "${var.user}"
+    user = var.user
   }
 }
 
 data "template_file" "shutdown" {
-  template = "${file("scripts/dev-shutdown.tpl")}"
+  template = file("scripts/dev-shutdown.tpl")
 
   vars = {
-    user = "${var.user}"
+    user = var.user
   }
 }

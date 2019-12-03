@@ -1,5 +1,5 @@
 resource "google_compute_disk" "test-gravity-disk-" {
-  count = "${var.test_node_count}"
+  count = var.test_node_count
   name  = "${var.env_name}-test-disk-${count.index}-gravity"
   type  = "pd-ssd"
   size  = "100"
@@ -11,7 +11,7 @@ resource "google_compute_disk" "test-gravity-disk-" {
 }
 
 resource "google_compute_disk" "test-etcd-disk-" {
-  count = "${var.test_node_count}"
+  count = var.test_node_count
   name  = "${var.env_name}-test-disk-${count.index}-etcd"
   type  = "pd-ssd"
   size  = "50"
@@ -23,11 +23,11 @@ resource "google_compute_disk" "test-etcd-disk-" {
 }
 
 resource "google_compute_instance" "test" {
-  count                     = "${var.test_node_count}"
+  count                     = var.test_node_count
   name                      = "${var.env_name}-test${count.index + 1}"
   description               = "Test VM - ${var.env_name}"
-  machine_type              = "${var.testVmType}"
-  zone                      = "${var.zone}"
+  machine_type              = var.testVmType
+  zone                      = var.zone
   allow_stopping_for_update = true
   can_ip_forward            = true
 
@@ -44,18 +44,18 @@ resource "google_compute_instance" "test" {
     initialize_params {
       size  = 60
       type  = "pd-ssd"
-      image = "${var.testImage}"
+      image = var.testImage
     }
   }
 
   attached_disk {
-    source      = "${element(google_compute_disk.test-etcd-disk-.*.self_link, count.index)}"
-    device_name = "${element(google_compute_disk.test-etcd-disk-.*.name, count.index)}"
+    source      = element(google_compute_disk.test-etcd-disk-.*.self_link, count.index)
+    device_name = element(google_compute_disk.test-etcd-disk-.*.name, count.index)
   }
 
   attached_disk {
-    source      = "${element(google_compute_disk.test-gravity-disk-.*.self_link, count.index)}"
-    device_name = "${element(google_compute_disk.test-gravity-disk-.*.name, count.index)}"
+    source      = element(google_compute_disk.test-gravity-disk-.*.self_link, count.index)
+    device_name = element(google_compute_disk.test-gravity-disk-.*.name, count.index)
   }
 
   metadata = {

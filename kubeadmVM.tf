@@ -1,9 +1,9 @@
 resource "google_compute_instance" "kubeadm" {
-  count                     = "${var.kubeadm_node_count}"
+  count                     = var.kubeadm_node_count
   name                      = "${var.env_name}-kubeadm${count.index + 1}"
   description               = "Kubeadm VM - ${var.env_name}"
-  machine_type              = "${var.kubeadmVmType}"
-  zone                      = "${var.zone}"
+  machine_type              = var.kubeadmVmType
+  zone                      = var.zone
   allow_stopping_for_update = true
   can_ip_forward            = true
 
@@ -11,7 +11,7 @@ resource "google_compute_instance" "kubeadm" {
 
   labels = {
     env   = "test"
-    user  = "${var.user}"
+    user  = var.user
   }
 
   boot_disk {
@@ -20,7 +20,7 @@ resource "google_compute_instance" "kubeadm" {
     initialize_params {
       size  = 60
       type  = "pd-ssd"
-      image = "${var.kubeadmImage}"
+      image = var.kubeadmImage
     }
   }
 
@@ -33,8 +33,8 @@ resource "google_compute_instance" "kubeadm" {
   }
 
   metadata = {
-    startup-script  = "${data.template_file.kubeadm_startup.rendered}"
-    shutdown-script = "${data.template_file.kubeadm_shutdown.rendered}"
+    startup-script  = data.template_file.kubeadm_startup.rendered
+    shutdown-script = data.template_file.kubeadm_shutdown.rendered
     ssh_keys = "${var.user}:${file("${var.ssh_keyfile}")}"
   }
 
@@ -44,17 +44,17 @@ resource "google_compute_instance" "kubeadm" {
 }
 
 data "template_file" "kubeadm_startup" {
-  template = "${file("scripts/kubeadm-startup.tpl")}"
+  template = file("scripts/kubeadm-startup.tpl")
 
   vars = {
-    user = "${var.user}"
+    user = var.user
   }
 }
 
 data "template_file" "kubeadm_shutdown" {
-  template = "${file("scripts/kubeadm-shutdown.tpl")}"
+  template = file("scripts/kubeadm-shutdown.tpl")
 
   vars = {
-    user = "${var.user}"
+    user = var.user
   }
 }
