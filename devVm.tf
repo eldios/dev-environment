@@ -50,6 +50,7 @@ data "google_compute_network" "network" {
 }
 
 resource "google_compute_firewall" "dev" {
+  count   = var.dev_node_count
   name    = "${var.env_name}-allow"
   network = data.google_compute_network.network.self_link
 
