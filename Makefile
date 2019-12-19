@@ -10,7 +10,7 @@ apply:
 	
 config: 
 	export planFile="$$(date +%F).plan" && \
-	terraform output | tail +2 > ~/.ssh/meetup.conf
+	terraform output | tail +2 > ~/.ssh/dev.conf
 
 clean:
 	terraform destroy -force -var-file=gcp.tfvars

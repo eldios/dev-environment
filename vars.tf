@@ -45,18 +45,18 @@ variable "devVmType" {
 }
 
 ################################################################################
-############################### KUBEADM VM #####################################
+################################# HUB VM #######################################
 ################################################################################
 
-variable kubeadm_node_count {
-  description = "Enable (1) or disable (0) creation of kubeadm VM"
+variable hub_node_count {
+  description = "Enable (1) or disable (0) creation of hub VM"
   default = 0
 }
-variable "kubeadmImage" {
-  description = "OS Image used by kubeadm VM"
+variable "hubImage" {
+  description = "OS Image used by hub VM"
   default = "ubuntu-1904-disco-v20190903"
 }
-variable "kubeadmVmType" {
+variable "hubVmType" {
   description = "Instance type used for DEV VMs"
   default = "n1-standard-1"
 }

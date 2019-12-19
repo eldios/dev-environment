@@ -22,8 +22,8 @@ Host ${host.name}
 %{ endfor ~}
 ###############################################################################
 
-#################################### KUBEADM ##################################
-%{ for host in google_compute_instance.kubeadm.* ~}
+###################################### HUB ####################################
+%{ for host in google_compute_instance.hub.* ~}
 
 Host ${host.name}
     Hostname ${host.network_interface.0.access_config.0.nat_ip}
