@@ -1,4 +1,4 @@
-resource "google_compute_disk" "test-gravity-disk-" {
+resource "google_compute_disk" "test-gravity-disk" {
   count = var.test_node_count
   name  = "${var.env_name}-test-disk-${count.index}-gravity"
   type  = "pd-ssd"
@@ -10,7 +10,7 @@ resource "google_compute_disk" "test-gravity-disk-" {
   }
 }
 
-resource "google_compute_disk" "test-etcd-disk-" {
+resource "google_compute_disk" "test-etcd-disk" {
   count = var.test_node_count
   name  = "${var.env_name}-test-disk-${count.index}-etcd"
   type  = "pd-ssd"
@@ -24,7 +24,7 @@ resource "google_compute_disk" "test-etcd-disk-" {
 
 resource "google_compute_instance" "test" {
   count                     = var.test_node_count
-  name                      = "${var.env_name}-test${count.index + 1}"
+  name                      = "${var.env_name}-test${count.index}"
   description               = "Test VM - ${var.env_name}"
   machine_type              = var.testVmType
   zone                      = var.zone

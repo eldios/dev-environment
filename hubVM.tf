@@ -1,6 +1,6 @@
 resource "google_compute_instance" "hub" {
   count                     = var.hub_node_count
-  name                      = "${var.env_name}-hub${count.index + 1}"
+  name                      = "${var.env_name}-hub${count.index}"
   description               = "Hub VM - ${var.env_name}"
   machine_type              = var.hubVmType
   zone                      = var.zone
