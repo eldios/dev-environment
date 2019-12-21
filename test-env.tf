@@ -49,13 +49,13 @@ resource "google_compute_instance" "test" {
   }
 
   attached_disk {
-    source      = element(google_compute_disk.test-etcd-disk-.*.self_link, count.index)
-    device_name = element(google_compute_disk.test-etcd-disk-.*.name, count.index)
+    source      = element(google_compute_disk.test-etcd-disk.*.self_link, count.index)
+    device_name = element(google_compute_disk.test-etcd-disk.*.name, count.index)
   }
 
   attached_disk {
-    source      = element(google_compute_disk.test-gravity-disk-.*.self_link, count.index)
-    device_name = element(google_compute_disk.test-gravity-disk-.*.name, count.index)
+    source      = element(google_compute_disk.test-gravity-disk.*.self_link, count.index)
+    device_name = element(google_compute_disk.test-gravity-disk.*.name, count.index)
   }
 
   metadata = {
