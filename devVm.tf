@@ -45,10 +45,6 @@ resource "google_compute_instance" "dev" {
   }
 }
 
-data "google_compute_network" "network" {
-  name = "default"
-}
-
 resource "google_compute_firewall" "dev" {
   count   = var.dev_node_count
   name    = "${var.env_name}-allow"

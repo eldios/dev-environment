@@ -2,6 +2,10 @@
 ######################### CLUSTER SETTINGS #####################################
 ################################################################################
 
+data "google_compute_network" "network" {
+  name = "default"
+}
+
 variable env_name {
   description = "Name assigned to Environment resources"
   default = "test-env"
