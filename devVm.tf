@@ -7,7 +7,7 @@ resource "google_compute_instance" "dev" {
   allow_stopping_for_update = true
   can_ip_forward            = true
 
-  tags = ["${var.env_name}", "devlele"]
+  tags = ["${var.env_name}", "dev-lele"]
 
   labels = {
     env   = "dev"
@@ -45,9 +45,9 @@ resource "google_compute_instance" "dev" {
   }
 }
 
-resource "google_compute_firewall" "dev" {
-  count   = var.dev_node_count
-  name    = "${var.env_name}-allow"
+resource "google_compute_firewall" "dev-fw" {
+  count   = 1
+  name    = "${var.env_name}-dev-allow"
   network = data.google_compute_network.network.self_link
 
   allow {
@@ -55,7 +55,7 @@ resource "google_compute_firewall" "dev" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags = ["devlele"]
+  target_tags = ["dev-lele"]
 }
 
 data "template_file" "startup" {

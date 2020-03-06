@@ -7,7 +7,7 @@ resource "google_compute_instance" "hub" {
   allow_stopping_for_update = true
   can_ip_forward            = true
 
-  tags = ["${var.env_name}-hub", "devlele"]
+  tags = ["${var.env_name}-hub", "hub-lele"]
 
   labels = {
     env   = "test"
@@ -41,6 +41,19 @@ resource "google_compute_instance" "hub" {
   service_account {
     scopes = ["userinfo-email", "compute-rw", "storage-rw"]
   }
+}
+
+resource "google_compute_firewall" "hub-fw" {
+  count   = 1
+  name    = "${var.env_name}-hub-allow"
+  network = data.google_compute_network.network.self_link
+
+  allow {
+    protocol = "all"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags = ["hub-lele"]
 }
 
 data "template_file" "hub_startup" {

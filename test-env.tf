@@ -31,7 +31,7 @@ resource "google_compute_instance" "test" {
   allow_stopping_for_update = true
   can_ip_forward            = true
 
-  tags = ["${var.env_name}-dev", "devlele"]
+  tags = ["${var.env_name}-test", "test-lele"]
 
   labels = {
     env   = "test"
@@ -76,6 +76,19 @@ resource "google_compute_instance" "test" {
     }
 
   }
+}
+
+resource "google_compute_firewall" "test-fw" {
+  count   = 1
+  name    = "${var.env_name}-test-allow"
+  network = data.google_compute_network.network.self_link
+
+  allow {
+    protocol = "all"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags = ["test-lele"]
 }
 
 data "template_file" "test_startup" {
