@@ -13,5 +13,5 @@ testImage="ubuntu-1604-xenial-v20190903"
 #testImage="ubuntu-1904-disco-v20190903"
 
 project="yourgoogleproject"
-region"europe-west3"
+region="europe-west3"
 zone="europe-west3-a"
